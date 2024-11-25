@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SzavazatszamlaloApplication<szavazatszamlalo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "Application.SzavazatszamlaloApplication",
+            "projectName": "szavazatszamlalo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
