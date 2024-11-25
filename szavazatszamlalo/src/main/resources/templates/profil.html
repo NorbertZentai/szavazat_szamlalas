@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Profil</h1>
+        <nav>
+            <a href="/">Főoldal</a>
+            <a href="/logout">Kijelentkezés</a>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="felhasznalo-adatok">
+            <h2>Felhasználói adatok</h2>
+            <p><strong>Név:</strong> <span th:text="${felhasznalo.nev}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${felhasznalo.email}"></span></p>
+            <p><strong>Utolsó belépés:</strong> <span th:text="${admin.utolsoBelepes}"></span></p>
+        </section>
+
+        <section id="szavazasok">
+            <h2>Leadott szavazásaim</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Szavazás neve</th>
+                        <th>Jelölt neve</th>
+                        <th>Leadás dátuma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iteráció a szavazatok felett -->
+                    <tr th:each="szavazas : ${felhasznalo.szavazatai}">
+                        <td th:text="${szavazas.megnevezes}"></td>
+                        <td th:text="${szavazas.jelolt.nev}"></td>
+                        <td th:text="${szavazas.leadasDatum}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="uj-szavazas">
+            <h2>Új szavazás létrehozása</h2>
+            <form action="/szavazas/letrehozas" method="POST">
+                <label for="megnevezes">Szavazás neve:</label>
+                <input type="text" id="megnevezes" name="megnevezes" placeholder="Szavazás neve" required>
+        
+                <label for="leiras">Leírás:</label>
+                <textarea id="leiras" name="leiras" placeholder="Szavazás leírása" required></textarea>
+        
+                <label for="indul">Indulás dátuma és időpontja:</label>
+                <input type="datetime-local" id="indul" name="indul" required>
+        
+                <label for="zarul">Zárás dátuma és időpontja:</label>
+                <input type="datetime-local" id="zarul" name="zarul" required>
+        
+                <fieldset>
+                    <legend>Válassz 3 jelöltet:</legend>
+                    <!-- Iteráció a jelöltek listáján -->
+                    <label for="jelolt1">Jelölt #1:</label>
+                    <select id="jelolt1" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+        
+                    <label for="jelolt2">Jelölt #2:</label>
+                    <select id="jelolt2" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+        
+                    <label for="jelolt3">Jelölt #3:</label>
+                    <select id="jelolt3" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+                </fieldset>
+        
+                <button type="submit">Szavazás létrehozása</button>
+            </form>
+        </section>        
+    </div>
+</body>
+</html>

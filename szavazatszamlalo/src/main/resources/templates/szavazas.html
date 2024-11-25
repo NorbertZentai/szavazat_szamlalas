@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szavazás</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1 th:text="${szavazas.megnevezes}"></h1>
+        <nav>
+            <ul>
+                <li><a href="/">Főoldal</a></li>
+                <li><a href="/szavazasok">Szavazások</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="szavazas-reszletek">
+            <h2>Szavazás részletei</h2>
+            <p><strong>Leírás:</strong> <span th:text="${szavazas.leiras}"></span></p>
+            <p><strong>Indulás dátuma:</strong> <span th:text="${szavazas.indulas}"></span></p>
+            <p><strong>Zárás dátuma:</strong> <span th:text="${szavazas.zarulas}"></span></p>
+        </section>
+
+        <section id="szavazas-leadas">
+            <h2>Jelöltek</h2>
+            <form th:action="@{'/szavazas/' + ${szavazas.id} + '/lead'}" method="POST">
+                <fieldset>
+                    <legend>Válaszd ki a jelöltedet:</legend>
+                    <th:block th:each="jelolt : ${jeloltek}">
+                        <label>
+                            <input type="radio" name="jeloltId" th:value="${jelolt.id}" required>
+                            <span th:text="${jelolt.nev}"></span>
+                        </label><br>
+                    </th:block>
+                </fieldset>
+                <button type="submit">Szavazás leadása</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

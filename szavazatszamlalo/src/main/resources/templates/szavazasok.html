@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kezdőlap</title>
+    <title>Szavazások</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Szavazatszámláló Rendszer</h1>
+        <h1>Szavazások</h1>
         <nav>
             <ul>
                 <li><a href="/">Főoldal</a></li>
-                <li><a href="/szavazasok">Szavazások</a></li>
                 <li><a href="/login">Bejelentkezés</a></li>
                 <li><a href="/register">Regisztráció</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>Üdvözlünk az alkalmazásban!</h2>
-        <p>Egy hely, ahol könnyen és gyorsan kezelheted a szavazásaidat.</p>
-
-        <section id="kihirdetett-szavazasok">
-            <h2>Aktuálisan kihirdetett szavazások</h2>
+        <section id="osszes-szavazas">
+            <h2>Elérhető Szavazások</h2>
             <table>
                 <thead>
                     <tr>
@@ -31,19 +27,23 @@
                         <th>Leírás</th>
                         <th>Indulás dátuma</th>
                         <th>Zárás dátuma</th>
+                        <th>Akció</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Iteráció a kihirdetett szavazások listáján -->
-                    <tr th:each="szavazas : ${kihirdetettSzavazasok}">
+                    <!-- Iteráció az összes szavazás listáján -->
+                    <tr th:each="szavazas : ${osszesSzavazas}">
                         <td th:text="${szavazas.megnevezes}"></td>
                         <td th:text="${szavazas.leiras}"></td>
                         <td th:text="${szavazas.indulas}"></td>
                         <td th:text="${szavazas.zarulas}"></td>
+                        <td>
+                            <a th:href="@{'/szavazas/' + ${szavazas.id}}" class="szavazas-gomb">Szavazás</a>
+                        </td>
                     </tr>
-                    <!-- Ha nincs kihirdetett szavazás -->
-                    <tr th:if="${kihirdetettSzavazasok.empty}">
-                        <td colspan="4">Jelenleg nincs kihirdetett szavazás.</td>
+                    <!-- Ha nincs elérhető szavazás -->
+                    <tr th:if="${osszesSzavazas.empty}">
+                        <td colspan="5">Jelenleg nincs elérhető szavazás.</td>
                     </tr>
                 </tbody>
             </table>

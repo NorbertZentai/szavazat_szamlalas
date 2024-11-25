@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+        <nav>
+            <a href="/">Főoldal</a>
+            <a href="/logout">Kijelentkezés</a>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="admin-adatok">
+            <h2>Admin Adatok</h2>
+            <p><strong>Név:</strong> <span th:text="${admin.nev}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${admin.email}"></span></p>
+            <p><strong>Utolsó belépés:</strong> <span th:text="${admin.utolsoBelepes}"></span></p>
+        </section>
+
+        <section id="felhasznalok">
+            <h2>Felhasználók</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Felhasználó neve</th>
+                        <th>Email</th>
+                        <th>Regisztráció dátuma</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="felhasznalo : ${felhasznalok}">
+                        <td><input type="text" th:value="${felhasznalo.nev}" /></td>
+                        <td><input type="email" th:value="${felhasznalo.email}" /></td>
+                        <td><input type="text" th:value="${felhasznalo.regisztracioDatum}" /></td>
+                        <td>
+                            <a href="#" th:href="@{'/felhasznalo/szerkeszt/' + ${felhasznalo.id}}">Szerkesztés</a> |
+                            <a href="#" th:href="@{'/felhasznalo/torol/' + ${felhasznalo.id}}">Törlés</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="szavazasok">
+            <h2>Szavazások</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Szavazás neve</th>
+                        <th>Leírás</th>
+                        <th>Indulás</th>
+                        <th>Zárás</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="szavazas : ${szavazasok}">
+                        <td><input type="text" th:value="${szavazas.megnevezes}" /></td>
+                        <td><input type="text" th:value="${szavazas.leiras}" /></td>
+                        <td><input type="datetime-local" th:value="${szavazas.indulas}" /></td>
+                        <td><input type="datetime-local" th:value="${szavazas.zarulas}" /></td>
+                        <td>
+                            <a href="#" th:href="@{'/szavazas/szerkeszt/' + ${szavazas.id}}">Szerkesztés</a> |
+                            <a href="#" th:href="@{'/szavazas/torol/' + ${szavazas.id}}">Törlés</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="jeloltek">
+            <h2>Jelöltek</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jelölt neve</th>
+                        <th>Leírás</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jelolt : ${jeloltek}">
+                        <td><input type="text" th:value="${jelolt.nev}" /></td>
+                        <td><input type="text" th:value="${jelolt.leiras}" /></td>
+                        <td>
+                            <a href="#" th:href="@{'/jelolt/szerkeszt/' + ${jelolt.id}}">Szerkesztés</a> |
+                            <a href="#" th:href="@{'/jelolt/torol/' + ${jelolt.id}}">Törlés</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="szavazatok">
+            <h2>Szavazatok</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Szavazás neve</th>
+                        <th>Felhasználó neve</th>
+                        <th>Jelölt neve</th>
+                        <th>Szavazás dátuma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="szavazat : ${szavazatok}">
+                        <td th:text="${szavazat.szavazas.megnevezes}"></td>
+                        <td th:text="${szavazat.felhasznalo.nev}"></td>
+                        <td th:text="${szavazat.jelolt.nev}"></td>
+                        <td th:text="${szavazat.datum}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="uj-szavazas">
+            <h2>Új szavazás létrehozása</h2>
+            <form action="/szavazas/letrehozas" method="POST">
+                <label for="megnevezes">Szavazás neve:</label>
+                <input type="text" id="megnevezes" name="megnevezes" placeholder="Szavazás neve" required>
+        
+                <label for="leiras">Leírás:</label>
+                <textarea id="leiras" name="leiras" placeholder="Szavazás leírása" required></textarea>
+        
+                <label for="indul">Indulás dátuma és időpontja:</label>
+                <input type="datetime-local" id="indul" name="indul" required>
+        
+                <label for="zarul">Zárás dátuma és időpontja:</label>
+                <input type="datetime-local" id="zarul" name="zarul" required>
+        
+                <fieldset>
+                    <legend>Válassz 3 jelöltet:</legend>
+                    <!-- Iteráció a jelöltek listáján -->
+                    <label for="jelolt1">Jelölt #1:</label>
+                    <select id="jelolt1" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+        
+                    <label for="jelolt2">Jelölt #2:</label>
+                    <select id="jelolt2" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+        
+                    <label for="jelolt3">Jelölt #3:</label>
+                    <select id="jelolt3" name="jeloltek[]" required>
+                        <option value="" disabled selected>Válassz egy jelöltet</option>
+                        <th:block th:each="jelolt : ${jeloltek}">
+                            <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
+                        </th:block>
+                    </select>
+                </fieldset>
+        
+                <button type="submit">Szavazás létrehozása</button>
+            </form>
+        </section>        
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regisztráció</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Regisztráció</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Főoldal</a></li>
+                <li><a href="/login">Bejelentkezés</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="register-form">
+            <h2>Hozz létre egy új fiókot</h2>
+            <form action="/register" method="POST">
+                <label for="nev">Név:</label>
+                <input type="text" id="nev" name="nev" placeholder="Teljes név" required>
+                
+                <label for="email">Email cím:</label>
+                <input type="email" id="email" name="email" placeholder="Email cím" required>
+                
+                <label for="password">Jelszó:</label>
+                <input type="password" id="password" name="password" placeholder="Jelszó" required>
+                
+                <label for="password-confirm">Jelszó mégegyszer:</label>
+                <input type="password" id="password-confirm" name="password-confirm" placeholder="Jelszó mégegyszer" required>
+                
+                <button type="submit">Regisztráció</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
