@@ -3,82 +3,86 @@ package Application.dao;
 import Application.model.Felhasznalo;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FelhasznaloDAO extends JdbcDaoSupport {
+public class FelhasznaloDAO {
 
     @Autowired
     private DataSource dataSource;
 
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
     @PostConstruct
     private void initialize() {
-        setDataSource(dataSource);
-    }
-
-    private boolean isJdbcTemplateValid() {
-        return getJdbcTemplate() != null;
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public List<Felhasznalo> getOsszesFelhasznalo() {
-        if (!isJdbcTemplateValid()) {
-            throw new IllegalStateException("JdbcTemplate is not properly initialized.");
-        }
-        String sql = "SELECT * FROM felhasznalok";
-        return getJdbcTemplate().query(sql, (rs, rowNum) -> {
+        String sql = "SELECT * FROM Felhasznalo";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Felhasznalo felhasznalo = new Felhasznalo();
             felhasznalo.setId(rs.getInt("id"));
-            felhasznalo.setFelhasznalonev(rs.getString("felhasznalonev"));
+            felhasznalo.setNev(rs.getString("felhasznalo_nev"));
             felhasznalo.setEmail(rs.getString("email"));
             felhasznalo.setJelszo(rs.getString("jelszo"));
-            felhasznalo.setLegutobbiBelepes(rs.getTimestamp("legutobbiBelepes"));
+            felhasznalo.setLegutobbiBelepes(rs.getTimestamp("legutobbi_belepes"));
+            felhasznalo.setSzerep(rs.getString("szerep"));
             return felhasznalo;
         });
     }
 
     public Felhasznalo mentesFelhasznalo(Felhasznalo felhasznalo) {
-        if (!isJdbcTemplateValid()) {
-            throw new IllegalStateException("JdbcTemplate is not properly initialized.");
-        }
-        String sql = "INSERT INTO felhasznalok(felhasznalonev, email, jelszo) VALUES (?, ?, ?)";
-        getJdbcTemplate().update(sql, felhasznalo.getFelhasznalonev(), felhasznalo.getEmail(), felhasznalo.getJelszo());
+        String sql = "INSERT INTO Felhasznalo(felhasznalo_nev, email, jelszo) VALUES (:felhasznalo_nev, :email, :jelszo)";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("felhasznalo_nev", felhasznalo.getNev())
+                .addValue("email", felhasznalo.getEmail())
+                .addValue("jelszo", felhasznalo.getJelszo())
+                .addValue("szerep", felhasznalo.getSzerep());
+        jdbcTemplate.update(sql, params);
         return felhasznalo;
     }
 
     public Optional<Felhasznalo> keresFelhasznalo(String felhasznalonev, String jelszo) {
-        if (!isJdbcTemplateValid()) {
-            throw new IllegalStateException("JdbcTemplate is not properly initialized.");
-        }
-        String sql = "SELECT * FROM felhasznalok WHERE felhasznalonev = ? AND jelszo = ?";
-        List<Felhasznalo> felhasznalok = getJdbcTemplate().query(sql, new Object[]{felhasznalonev, jelszo},
-                (rs, rowNum) -> {
-                    Felhasznalo f = new Felhasznalo();
-                    f.setId(rs.getInt("id"));
-                    f.setFelhasznalonev(rs.getString("felhasznalonev"));
-                    f.setEmail(rs.getString("email"));
-                    f.setJelszo(rs.getString("jelszo"));
-                    f.setLegutobbiBelepes(rs.getTimestamp("legutobbiBelepes"));
-                    return f;
-                });
+        String sql = "SELECT * FROM Felhasznalo WHERE felhasznalo_nev = :felhasznalo_nev AND jelszo = :jelszo";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("felhasznalo_nev", felhasznalonev)
+                .addValue("jelszo", jelszo);
+
+        List<Felhasznalo> felhasznalok = jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Felhasznalo f = new Felhasznalo();
+            f.setId(rs.getInt("id"));
+            f.setNev(rs.getString("felhasznalo_nev"));
+            f.setEmail(rs.getString("email"));
+            f.setJelszo(rs.getString("jelszo"));
+            f.setLegutobbiBelepes(rs.getTimestamp("legutobbi_belepes"));
+            f.setSzerep(rs.getString("szerep"));
+            return f;
+        });
         return felhasznalok.isEmpty() ? Optional.empty() : Optional.of(felhasznalok.get(0));
     }
 
     public Felhasznalo getFelhasznaloByEmail(String email) {
-        String sql = "SELECT * FROM felhasznalok WHERE email = ?";
-        List<Felhasznalo> felhasznalok = getJdbcTemplate().query(sql, new Object[]{email}, (rs, rowNum) -> {
+        String sql = "SELECT * FROM Felhasznalo WHERE email = :email";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("email", email);
+
+        List<Felhasznalo> felhasznalok = jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             Felhasznalo f = new Felhasznalo();
             f.setId(rs.getInt("id"));
-            f.setFelhasznalonev(rs.getString("felhasznalonev"));
+            f.setNev(rs.getString("felhasznalo_nev"));
             f.setEmail(rs.getString("email"));
             f.setJelszo(rs.getString("jelszo"));
-            f.setLegutobbiBelepes(rs.getTimestamp("legutobbiBelepes"));
+            f.setLegutobbiBelepes(rs.getTimestamp("legutobbi_belepes"));
+            f.setSzerep(rs.getString("szerep"));
             return f;
         });
 
-        return felhasznalok.isEmpty() ? null : felhasznalok.get(0);  // Ha nincs találat, null-t adunk vissza
+        return felhasznalok.isEmpty() ? null : felhasznalok.get(0);
     }
 }

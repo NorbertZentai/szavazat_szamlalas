@@ -5,27 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-    <header>
-        <h1>Profil</h1>
-        <nav>
-            <a href="/">Főoldal</a>
-            <a href="/logout">Kijelentkezés</a>
-        </nav>
-    </header>
-    <div class="container">
-        <section id="felhasznalo-adatok">
-            <h2>Felhasználói adatok</h2>
-            <p><strong>Név:</strong> <span th:text="${felhasznalo.nev}"></span></p>
-            <p><strong>Email:</strong> <span th:text="${felhasznalo.email}"></span></p>
-            <p><strong>Utolsó belépés:</strong> <span th:text="${admin.utolsoBelepes}"></span></p>
-        </section>
-
-        <section id="szavazasok">
-            <h2>Leadott szavazásaim</h2>
-            <table>
-                <thead>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" href="/">Szavazás App</a>
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/">Főoldal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/logout">Kijelentkezés</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<main class="container mt-4">
+    <section id="felhasznalo-adatok" class="mb-4">
+        <h2>Felhasználói adatok</h2>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Név:</strong> <span th:text="${felhasznalo.nev}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${felhasznalo.email}"></span></p>
+                <p><strong>Utolsó belépés:</strong> <span th:text="${admin.utolsoBelepes}"></span></p>
+            </div>
+        </div>
+    </section>
+    <section id="szavazasok" class="mb-4">
+        <h2>Leadott szavazásaim</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-light">
                     <tr>
                         <th>Szavazás neve</th>
                         <th>Jelölt neve</th>
@@ -33,7 +51,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Iteráció a szavazatok felett -->
                     <tr th:each="szavazas : ${felhasznalo.szavazatai}">
                         <td th:text="${szavazas.megnevezes}"></td>
                         <td th:text="${szavazas.jelolt.nev}"></td>
@@ -41,54 +58,84 @@
                     </tr>
                 </tbody>
             </table>
-        </section>
-
-        <section id="uj-szavazas">
-            <h2>Új szavazás létrehozása</h2>
-            <form action="/szavazas/letrehozas" method="POST">
+        </div>
+    </section>
+    <section id="uj-szavazas" class="mb-4">
+        <h2>Új szavazás létrehozása</h2>
+        <form action="/szavazas/letrehozas" method="POST" class="needs-validation" novalidate>
+            <div class="form-group">
                 <label for="megnevezes">Szavazás neve:</label>
-                <input type="text" id="megnevezes" name="megnevezes" placeholder="Szavazás neve" required>
-        
+                <input type="text" id="megnevezes" name="megnevezes" class="form-control" placeholder="Szavazás neve" required>
+                <div class="invalid-feedback">Kérjük adja meg a szavazás nevét!</div>
+            </div>
+            <div class="form-group">
                 <label for="leiras">Leírás:</label>
-                <textarea id="leiras" name="leiras" placeholder="Szavazás leírása" required></textarea>
-        
+                <textarea id="leiras" name="leiras" class="form-control" placeholder="Szavazás leírása" required></textarea>
+                <div class="invalid-feedback">Kérjük adja meg a szavazás leírását!</div>
+            </div>
+            <div class="form-group">
                 <label for="indul">Indulás dátuma és időpontja:</label>
-                <input type="datetime-local" id="indul" name="indul" required>
-        
+                <input type="datetime-local" id="indul" name="indul" class="form-control" required>
+                <div class="invalid-feedback">Kérjük válasszon indulási időpontot!</div>
+            </div>
+            <div class="form-group">
                 <label for="zarul">Zárás dátuma és időpontja:</label>
-                <input type="datetime-local" id="zarul" name="zarul" required>
-        
-                <fieldset>
-                    <legend>Válassz 3 jelöltet:</legend>
-                    <!-- Iteráció a jelöltek listáján -->
+                <input type="datetime-local" id="zarul" name="zarul" class="form-control" required>
+                <div class="invalid-feedback">Kérjük válasszon zárási időpontot!</div>
+            </div>
+            <fieldset class="form-group">
+                <legend>Válassz 3 jelöltet:</legend>
+                <div class="form-group">
                     <label for="jelolt1">Jelölt #1:</label>
-                    <select id="jelolt1" name="jeloltek[]" required>
+                    <select id="jelolt1" name="jeloltek[]" class="form-control" required>
                         <option value="" disabled selected>Válassz egy jelöltet</option>
                         <th:block th:each="jelolt : ${jeloltek}">
                             <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
                         </th:block>
                     </select>
-        
+                    <div class="invalid-feedback">Kérjük válasszon egy jelöltet!</div>
+                </div>
+                <div class="form-group">
                     <label for="jelolt2">Jelölt #2:</label>
-                    <select id="jelolt2" name="jeloltek[]" required>
+                    <select id="jelolt2" name="jeloltek[]" class="form-control" required>
                         <option value="" disabled selected>Válassz egy jelöltet</option>
                         <th:block th:each="jelolt : ${jeloltek}">
                             <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
                         </th:block>
                     </select>
-        
+                    <div class="invalid-feedback">Kérjük válasszon egy jelöltet!</div>
+                </div>
+                <div class="form-group">
                     <label for="jelolt3">Jelölt #3:</label>
-                    <select id="jelolt3" name="jeloltek[]" required>
+                    <select id="jelolt3" name="jeloltek[]" class="form-control" required>
                         <option value="" disabled selected>Válassz egy jelöltet</option>
                         <th:block th:each="jelolt : ${jeloltek}">
                             <option th:value="${jelolt.id}" th:text="${jelolt.nev}"></option>
                         </th:block>
                     </select>
-                </fieldset>
-        
-                <button type="submit">Szavazás létrehozása</button>
-            </form>
-        </section>        
-    </div>
+                    <div class="invalid-feedback">Kérjük válasszon egy jelöltet!</div>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Szavazás létrehozása</button>
+        </form>
+    </section>
+</main>
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 </body>
 </html>

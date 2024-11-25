@@ -18,15 +18,4 @@ public class FelhasznaloController {
     public List<Felhasznalo> getOsszesFelhasznalo() {
         return felhasznaloDao.getOsszesFelhasznalo();
     }
-
-    @PostMapping("/regisztracio")
-    public Felhasznalo regisztralFelhasznalo(@RequestBody Felhasznalo felhasznalo) {
-        return felhasznaloDao.mentesFelhasznalo(felhasznalo);
-    }
-
-    @PostMapping("/bejelentkezes")
-    public String bejelentkezes(@RequestBody Felhasznalo felhasznalo) {
-        boolean sikeres = felhasznaloDao.keresFelhasznalo(felhasznalo.getFelhasznalonev(), felhasznalo.getJelszo()).isPresent();
-        return sikeres ? "Sikeres bejelentkezés!" : "Hibás felhasználónév vagy jelszó!";
-    }
 }

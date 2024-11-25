@@ -1,53 +1,86 @@
 <!DOCTYPE html>
 <html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kezdőlap</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Szavazatszámláló Rendszer</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Főoldal</a></li>
-                <li><a href="/szavazasok">Szavazások</a></li>
-                <li><a href="/login">Bejelentkezés</a></li>
-                <li><a href="/register">Regisztráció</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h2>Üdvözlünk az alkalmazásban!</h2>
-        <p>Egy hely, ahol könnyen és gyorsan kezelheted a szavazásaidat.</p>
-
-        <section id="kihirdetett-szavazasok">
-            <h2>Aktuálisan kihirdetett szavazások</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Szavazás neve</th>
-                        <th>Leírás</th>
-                        <th>Indulás dátuma</th>
-                        <th>Zárás dátuma</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iteráció a kihirdetett szavazások listáján -->
-                    <tr th:each="szavazas : ${kihirdetettSzavazasok}">
-                        <td th:text="${szavazas.megnevezes}"></td>
-                        <td th:text="${szavazas.leiras}"></td>
-                        <td th:text="${szavazas.indulas}"></td>
-                        <td th:text="${szavazas.zarulas}"></td>
-                    </tr>
-                    <!-- Ha nincs kihirdetett szavazás -->
-                    <tr th:if="${kihirdetettSzavazasok.empty}">
-                        <td colspan="4">Jelenleg nincs kihirdetett szavazás.</td>
-                    </tr>
-                </tbody>
+   <head>
+      <title>Szavazatszámláló Rendszer</title>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="stylesheet" href="style.css" />
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+   </head>
+   <body>
+      <header>
+         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+               <a class="navbar-brand" href="/">Szavazatszámláló Rendszer</a>
+               <div class="navbar-collapse collapse">
+                  <ul class="navbar-nav">
+                     <li class="nav-item">
+                        <a class="nav-link text-dark" href="/">Főoldal</a>
+                     </li>
+                     <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a class="nav-link text-dark" href="/login">Bejelentkezés</a>
+                     </li>
+                     <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a class="nav-link text-dark" href="/register">Regisztráció</a>
+                     </li>
+                     <li sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item">
+                        <a class="nav-link text-dark" href="/admin">Adminisztráció</a>
+                     </li>
+                     <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link text-dark" href="/logout">Kijelentkezés</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      </header>
+      <main class="container">
+         <h2>Üdvözlünk az alkalmazásban!</h2>
+         <p>Egy hely, ahol könnyen és gyorsan kezelheted a szavazásaidat.</p>
+         <section id="kihirdetett-szavazasok">
+            <h3>Aktuálisan kihirdetett szavazások</h3>
+            <table class="table table-striped">
+               <thead>
+                  <tr>
+                     <th>Szavazás neve</th>
+                     <th>Leírás</th>
+                     <th>Indulás dátuma</th>
+                     <th>Zárás dátuma</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="szavazas : ${kihirdetettSzavazasok}">
+                     <td th:text="${szavazas.megnevezes}"></td>
+                     <td th:text="${szavazas.leiras}"></td>
+                     <td th:text="${szavazas.indulas}"></td>
+                     <td th:text="${szavazas.zarulas}"></td>
+                  </tr>
+                  <tr th:if="${kihirdetettSzavazasok.empty}">
+                     <td colspan="4">Jelenleg nincs kihirdetett szavazás.</td>
+                  </tr>
+               </tbody>
             </table>
-        </section>
-    </main>
-</body>
+         </section>
+         <div sec:authorize="isAuthenticated()">
+            <h3>Hozz létre új szavazást</h3>
+            <form th:action="@{/create}" method="post">
+               <div class="form-group">
+                  <label for="szavazasNev">Szavazás neve:</label>
+                  <input type="text" class="form-control" id="szavazasNev" name="szavazasNev" required />
+               </div>
+               <div class="form-group">
+                  <label for="leiras">Leírás:</label>
+                  <textarea class="form-control" id="leiras" name="leiras" required></textarea>
+               </div>
+               <button type="submit" class="btn btn-primary">Létrehozás</button>
+            </form>
+         </div>
+      </main>
+      <footer class="text-center mt-5">
+         <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+      </footer>
+   </body>
 </html>
