@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szavazás részletei</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<header>
+    <nav class="header-nav">
+        <div class="container">
+            <a class="brand" href="/">Szavazatszámlálás</a>
+            <ul class="nav-items">
+                <li><a href="/">Főoldal</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <section id="szavazas">
+        <h1 th:text="${szavazas.megnevezes}">Szavazás neve</h1>
+        <p><strong>Leírás:</strong> <span th:text="${szavazas.leiras}">Itt jelenik meg a szavazás leírása.</span></p>
+        <p><strong>Indulás dátuma:</strong> <span th:text="${szavazas.indul}">2024-11-01</span></p>
+        <p><strong>Zárás dátuma:</strong> <span th:text="${szavazas.zarul}">2024-12-01</span></p>
+
+        <h2>Jelöltek</h2>
+        
+        <div th:if="${not marSzavazott}">
+            <form th:action="@{/szavazas/{id}(id=${szavazas.id})}" method="post">
+                <div>
+                    <input type="radio" id="jelolt1" name="jelolt" th:value="${jelolt1.id}" required>
+                    <label th:for="jelolt1" th:text="${jelolt1.nev}">Jelölt 1</label>
+                </div>
+                <div>
+                    <input type="radio" id="jelolt2" name="jelolt" th:value="${jelolt2.id}" required>
+                    <label th:for="jelolt2" th:text="${jelolt2.nev}">Jelölt 2</label>
+                </div>
+                <div>
+                    <input type="radio" id="jelolt3" name="jelolt" th:value="${jelolt3.id}" required>
+                    <label th:for="jelolt3" th:text="${jelolt3.nev}">Jelölt 3</label>
+                </div>
+                <input type="hidden" name="felhasznaloId" th:value="${#authentication.principal.id}" />
+                <button type="submit">Szavazás leadása</button>
+            </form>
+        </div>
+
+        <div th:if="${marSzavazott}">
+            <p>Ezúttal már leadta szavazatát, nem szavazhat többet ezen a szavazáson.</p>
+        </div>
+    </section>
+</main>
+
+
+<footer class="footer">
+    <p>&copy; 2024 Szavazás. Minden jog fenntartva.</p>
+</footer>
+
+</body>
+</html>

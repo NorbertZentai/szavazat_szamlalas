@@ -2,11 +2,31 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-SzavazatszamlaloApplication<szavazatszamlalo>",
+            "name": "Spring Boot-Application<Szavazat_Szamlalas>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "Application.SzavazatszamlaloApplication",
+            "mainClass": "application.Application",
+            "projectName": "Szavazat_Szamlalas",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SzavazatSzamlalasApplication<szavazatszamlalo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "application.SzavazatSzamlalasApplication",
             "projectName": "szavazatszamlalo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<szamlalas>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "application.Application",
+            "projectName": "szamlalas",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

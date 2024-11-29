@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Regisztráció</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Szavazatszámlálás</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>        
+    </header>
+    <main class="container">
+        <h1>Regisztráció</h1>
+        <form th:action="@{/registeruser}" method="POST">
+            <div>
+                <label for="name">Felhasználónév:</label>
+                <input type="text" id="name" name="name" required />
+            </div>
+            <div>
+                <label for="email">Email cím:</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div>
+                <label for="password">Jelszó:</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+            <div>
+                <label for="confirmPassword">Jelszó mégegyszer:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required />
+            </div>
+            <button type="submit">Regisztráció</button>
+        </form>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+    </footer>
+</body>
+</html>

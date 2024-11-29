@@ -1,0 +1,106 @@
+/* Általános stílusok */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Bézs háttér */
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* A teljes képernyő magasságát lefedi */
+}
+
+/* Fő tartalom */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+    flex: 1; /* A tartalom kitölti a fennmaradó helyet */
+}
+
+/* Fejléc */
+.header-nav {
+    background-color: #d2b48c; /* Világos bézs */
+    color: #fff;
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header-nav .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+}
+
+.header-nav .nav-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.header-nav .nav-items li {
+    margin: 0 0.5rem;
+}
+
+.header-nav .nav-items li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.header-nav .nav-items li a:hover {
+    background-color: #a0522d; /* Sötétebb bézs */
+}
+
+/* Táblázat stílus */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+.data-table th {
+    background-color: #d2b48c;
+    color: #fff;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Lábléc */
+.footer {
+    text-align: center;
+    background-color: #d2b48c;
+    color: #fff;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: auto; /* Láblécet az oldal aljára helyezi */
+}

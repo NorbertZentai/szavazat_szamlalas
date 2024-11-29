@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Szavazatszámláló Rendszer</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<header>
+    <nav class="header-nav">
+        <div class="container">
+            <a class="brand" href="/">Szavazatszámlálás</a>
+            <ul class="nav-items">
+                <li><a href="/">Főoldal</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="container">
+    <h1>Üdvözlünk az alkalmazásban!</h1>
+    <p>Egy hely, ahol könnyen és gyorsan kezelheted a szavazásaidat.</p>
+    <section id="kihirdetett-szavazasok">
+        <h2>Aktuálisan kihirdetett szavazások</h2>
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Szavazás neve</th>
+                <th>Leírás</th>
+                <th>Indulás dátuma</th>
+                <th>Zárás dátuma</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="szavazas : ${kihirdetettSzavazasok}">
+                <td th:text="${szavazas.megnevezes}">Szavazás neve</td>
+                <td th:text="${szavazas.leiras}">Leírás</td>
+                <td th:text="${szavazas.indul}">Indulás dátuma</td>
+                <td th:text="${szavazas.zarul}">Zárás dátuma</td>
+            </tr>
+            <tr th:if="${kihirdetettSzavazasok.empty}">
+                <td colspan="5">Jelenleg nincs kihirdetett szavazás.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer class="footer">
+    <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+</footer>
+</body>
+</html>

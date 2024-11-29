@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profil</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Szavazatszámlálás</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>        
+    </header>
+    <main class="container">
+        <h1>Profil</h1>
+        
+        <section>
+            <h2>Felhasználói adatok</h2>
+            <p><strong>Név:</strong> <span th:text="${felhasznalo.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${felhasznalo.email}"></span></p>
+            <p><strong>Utolsó belépés:</strong> <span th:text="${felhasznalo.legutobbiBelepes}"></span></p>
+        </section>
+
+        <section>
+            <h2>Profil frissítése</h2>
+            <form th:action="@{/profil}" method="post">
+                <div>
+                    <label for="username">Felhasználónév:</label>
+                    <input type="text" id="username" name="username" th:value="${felhasznalo.name}" required />
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" th:value="${felhasznalo.email}" required />
+                </div>
+                <div>
+                    <button type="submit">Frissítés</button>
+                </div>
+            </form>
+        </section>
+        <section>
+            <h2>Leadott szavazásaim</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Szavazás neve</th>
+                        <th>Jelölt neve</th>
+                        <th>Leadás dátuma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="szavazas, iterStat : ${szavazatai}">
+                        <td><a th:href="@{'/szavazas/' + ${szavazas.szavazasId} + '?felhasznaloId=' + ${#authentication.principal.id}}" th:text="${szavazas.szavazasId}">Szavazás neve</a></td>
+                        <td th:text="${jeloltNevek[iterStat.index]}">Jelölt neve</td>
+                        <td th:text="${szavazas.idopont}">Dátum</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
