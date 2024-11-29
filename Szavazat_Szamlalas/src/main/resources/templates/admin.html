@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
     <header>
         <nav class="header-nav">
             <div class="container">
-                <a class="brand" href="/">Szavazatszámlálás</a>
+                <a class="brand" href="/">Admin</a>
                 <ul class="nav-items">
                     <li><a href="/">Főoldal</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
                     <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
-                    <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
                     <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
                     <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
@@ -148,7 +149,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2024 Admin Panel. All rights reserved.</p>
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
     </footer>
 </body>
 </html>

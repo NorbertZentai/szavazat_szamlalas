@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Szavazások</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-<header>
-    <nav class="header-nav">
-        <div class="container">
-            <a class="brand" href="/">Szavazatszámlálás</a>
-            <ul class="nav-items">
-                <li><a href="/">Főoldal</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
-                <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
-            </ul>
-        </div>
-    </nav>    
-</header>
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Szavazások</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>    
+    </header>
 
-<main class="container">
-    <section id="szavazasok">
-        <h2>Aktuális Szavazások</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Szavazás neve</th>
-                    <th>Leírás</th>
-                    <th>Indulás</th>
-                    <th>Zárás</th>
-                    <th>Részvétel</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="szavazas : ${szavazasok}">
-                    <td th:text="${szavazas.megnevezes}"></td>
-                    <td th:text="${szavazas.leiras}"></td>
-                    <td th:text="${szavazas.indul}">Indulás dátuma</td>
-                    <td th:text="${szavazas.zarul}">Zárás dátuma</td>
-                    <td>
-                        <a href="#" th:href="@{'/szavazas/' + ${szavazas.id} + '?felhasznaloId=' + ${#authentication.principal.id}}" class="btn btn-primary btn-sm">Szavazás</a>
+    <main class="container">
+        <section id="szavazasok">
+            <h2>Aktuális Szavazások</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Szavazás neve</th>
+                        <th>Leírás</th>
+                        <th>Indulás</th>
+                        <th>Zárás</th>
+                        <th>Részvétel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="szavazas : ${szavazasok}">
+                        <td th:text="${szavazas.megnevezes}"></td>
+                        <td th:text="${szavazas.leiras}"></td>
+                        <td th:text="${szavazas.indul}">Indulás dátuma</td>
+                        <td th:text="${szavazas.zarul}">Zárás dátuma</td>
+                        <td>
+                            <a href="#" th:href="@{'/szavazas/' + ${szavazas.id} + '?felhasznaloId=' + ${#authentication.principal.id}}" class="btn btn-primary btn-sm">Szavazás</a>
 
-                    </td>
-                </tr>
-                <tr th:if="${szavazasok.empty}">
-                    <td colspan="5">Jelenleg nincs aktív szavazás.</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-</main>
+                        </td>
+                    </tr>
+                    <tr th:if="${szavazasok.empty}">
+                        <td colspan="5">Jelenleg nincs aktív szavazás.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
 
-<footer class="footer">
-    <p>&copy; 2024 Szavazások. Minden jog fenntartva.</p>
-</footer>
-
+    <footer class="footer">
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+    </footer>
 </body>
 </html>

@@ -2,52 +2,57 @@
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Új Jelölt Hozzáadása</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-<header>
-    <nav class="header-nav">
-        <div class="container">
-            <a class="brand" href="/">Szavazatszámlálás</a>
-            <ul class="nav-items">
-                <li><a href="/">Főoldal</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
-                <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
-            </ul>
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Új Jelölt</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <h1>Új Jelölt Hozzáadása</h1>
+        <form th:action="@{/ujjelolt}" method="post">
+            <label for="nev">Név:</label>
+            <input type="text" id="nev" name="nev" required /><br /><br />
+
+            <label for="szulDatum">Születési dátum:</label>
+            <input type="date" id="szulDatum" name="szulDatum" required /><br /><br />
+
+            <label for="foglalkozas">Foglalkozás:</label>
+            <input type="text" id="foglalkozas" name="foglalkozas" required /><br /><br />
+
+            <label for="program">Program:</label>
+            <textarea id="program" name="program" required></textarea><br /><br />
+
+            <button type="submit">Jelölt Hozzáadása</button>
+        </form>
+        <div th:if="${errorMessage}" class="error">
+            <p th:text="${errorMessage}"></p>
         </div>
-    </nav>
-</header>
-<main class="container">
-    <h1>Új Jelölt Hozzáadása</h1>
-    <form th:action="@{/ujjelolt}" method="post">
-        <label for="nev">Név:</label>
-        <input type="text" id="nev" name="nev" required /><br /><br />
+        <div th:if="${message}" class="success">
+            <p th:text="${message}"></p>
+        </div>
+    </main>
 
-        <label for="szulDatum">Születési dátum:</label>
-        <input type="date" id="szulDatum" name="szulDatum" required /><br /><br />
-
-        <label for="foglalkozas">Foglalkozás:</label>
-        <input type="text" id="foglalkozas" name="foglalkozas" required /><br /><br />
-
-        <label for="program">Program:</label>
-        <textarea id="program" name="program" required></textarea><br /><br />
-
-        <button type="submit">Jelölt Hozzáadása</button>
-    </form>
-    <div th:if="${errorMessage}" class="error">
-        <p th:text="${errorMessage}"></p>
-    </div>
-    <div th:if="${message}" class="success">
-        <p th:text="${message}"></p>
-    </div>
-</main>
+    <footer class="footer">
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+    </footer>
 </body>
 </html>

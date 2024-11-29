@@ -2,22 +2,23 @@
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Bejelentkezés</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
     <header>
         <nav class="header-nav">
             <div class="container">
-                <a class="brand" href="/">Szavazatszámlálás</a>
+                <a class="brand" href="/">Bejelentkezés</a>
                 <ul class="nav-items">
                     <li><a href="/">Főoldal</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
                     <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
-                    <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
                     <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
                     <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
                     <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
@@ -43,6 +44,7 @@
         </form>
         <p>Még nincs fiókod? <a href="/register">Regisztrálj!</a></p>
     </main>
+
     <footer class="footer">
         <p>&copy; 2024 Szavazatszámláló Rendszer</p>
     </footer>

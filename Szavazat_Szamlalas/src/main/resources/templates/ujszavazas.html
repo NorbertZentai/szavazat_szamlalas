@@ -2,67 +2,72 @@
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Új Szavazás Létrehozása</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-<header>
-    <nav class="header-nav">
-        <div class="container">
-            <a class="brand" href="/">Szavazatszámlálás</a>
-            <ul class="nav-items">
-                <li><a href="/">Főoldal</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
-                <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/ujjelolt">Új jelölt</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
-                <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-<main class="container">
-    <h1>Új Szavazás Létrehozása</h1>
-    <form th:action="@{/ujszavazas}" method="post">
-        <label for="megnevezes">Szavazás neve:</label>
-        <input type="text" id="megnevezes" name="megnevezes" required /><br /><br />
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Új Szavazás</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <h1>Új Szavazás Létrehozása</h1>
+        <form th:action="@{/ujszavazas}" method="post">
+            <label for="megnevezes">Szavazás neve:</label>
+            <input type="text" id="megnevezes" name="megnevezes" required /><br /><br />
 
-        <label for="leiras">Leírás:</label>
-        <textarea id="leiras" name="leiras" required></textarea><br /><br />
+            <label for="leiras">Leírás:</label>
+            <textarea id="leiras" name="leiras" required></textarea><br /><br />
 
-        <label for="indul">Indulás:</label>
-        <input type="datetime-local" id="indul" name="indul" required /><br /><br />
+            <label for="indul">Indulás:</label>
+            <input type="datetime-local" id="indul" name="indul" required /><br /><br />
 
-        <label for="zarul">Zárás:</label>
-        <input type="datetime-local" id="zarul" name="zarul" required /><br /><br />
+            <label for="zarul">Zárás:</label>
+            <input type="datetime-local" id="zarul" name="zarul" required /><br /><br />
 
-        <label for="jelolt1_id">Jelölt 1:</label>
-        <select name="jelolt1_id" id="jelolt1_id" required>
-            <option th:each="jelolt : ${jeloltek}" 
-                    th:value="${jelolt.id}" 
-                    th:text="${jelolt.nev}"></option>
-        </select><br /><br />
+            <label for="jelolt1_id">Jelölt 1:</label>
+            <select name="jelolt1_id" id="jelolt1_id" required>
+                <option th:each="jelolt : ${jeloltek}" 
+                        th:value="${jelolt.id}" 
+                        th:text="${jelolt.nev}"></option>
+            </select><br /><br />
 
-        <label for="jelolt2_id">Jelölt 2:</label>
-        <select name="jelolt2_id" id="jelolt2_id" required>
-            <option th:each="jelolt : ${jeloltek}" 
-                    th:value="${jelolt.id}" 
-                    th:text="${jelolt.nev}"></option>
-        </select><br /><br />
+            <label for="jelolt2_id">Jelölt 2:</label>
+            <select name="jelolt2_id" id="jelolt2_id" required>
+                <option th:each="jelolt : ${jeloltek}" 
+                        th:value="${jelolt.id}" 
+                        th:text="${jelolt.nev}"></option>
+            </select><br /><br />
 
-        <label for="jelolt3_id">Jelölt 3:</label>
-        <select name="jelolt3_id" id="jelolt3_id" required>
-            <option th:each="jelolt : ${jeloltek}" 
-                    th:value="${jelolt.id}" 
-                    th:text="${jelolt.nev}"></option>
-        </select><br /><br />
+            <label for="jelolt3_id">Jelölt 3:</label>
+            <select name="jelolt3_id" id="jelolt3_id" required>
+                <option th:each="jelolt : ${jeloltek}" 
+                        th:value="${jelolt.id}" 
+                        th:text="${jelolt.nev}"></option>
+            </select><br /><br />
 
-        <button type="submit">Szavazás Létrehozása</button>
-    </form>
-</main>
+            <button type="submit">Szavazás Létrehozása</button>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+    </footer>
 </body>
 </html>

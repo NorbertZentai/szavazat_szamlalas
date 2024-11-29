@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lekérdezések</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+    <header>
+        <nav class="header-nav">
+            <div class="container">
+                <a class="brand" href="/">Lekérdezések</a>
+                <ul class="nav-items">
+                    <li><a href="/">Főoldal</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/szavazasok">Szavazások</a></li>
+                    <li><a href="/lekerdezes">Lekérdezesek</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/profil">Profil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/ujszavazas">Új szavazás</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a href="/ujjelolt">Új jelölt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/login">Bejelentkezés</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a href="/register">Regisztráció</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">Kijelentkezés</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <h1>Adatok Lekérdezése</h1>
+
+        <section id="szavazas-adatok">
+            <h2>Szavazások adatai</h2>
+            <p>Ez a táblázat az összes szavazás nevét, leírását és az ezekhez tartozó szavazatok számát mutatja.</p>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Szavazás neve</th>
+                    <th>Leírás</th>
+                    <th>Szavazatok száma</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${szavazasAdatok}">
+                    <td th:text="${row.szavazas_neve}">Szavazás neve</td>
+                    <td th:text="${row.szavazas_leirasa}">Leírás</td>
+                    <td th:text="${row.szavazatok_szama}">Szavazatok száma</td>
+                </tr>
+                <tr th:if="${szavazasAdatok.empty}">
+                    <td colspan="3">Nincs adat.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="szavazat-jelolt">
+            <h2>Szavazatok Jelöltenként</h2>
+            <p>Ez a táblázat minden jelölt nevét és az általuk kapott szavazatok számát jeleníti meg.</p>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Jelölt neve</th>
+                    <th>Szavazatok száma</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${szavazatByJelolt}">
+                    <td th:text="${row.jelolt_nev}">Jelölt neve</td>
+                    <td th:text="${row.szavazatok_szama}">Szavazatok száma</td>
+                </tr>
+                <tr th:if="${szavazatByJelolt.empty}">
+                    <td colspan="2">Nincs adat.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="szavazatok-jeloltek-szavazasok">
+            <h2>Szavazatok Szavazások és Jelöltek szerint</h2>
+            <p>Ez a táblázat azt mutatja meg, hogy egy adott szavazáson belül az egyes jelöltek hány szavazatot kaptak.</p>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Szavazás neve</th>
+                    <th>Jelölt neve</th>
+                    <th>Szavazatok száma</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${szavazatokBySzavazasokEsJeloltek}">
+                    <td th:text="${row.szavazas_nev}">Szavazás neve</td>
+                    <td th:text="${row.jelolt_nev}">Jelölt neve</td>
+                    <td th:text="${row.szavazatok_szama}">Szavazatok száma</td>
+                </tr>
+                <tr th:if="${szavazatokBySzavazasokEsJeloltek.empty}">
+                    <td colspan="3">Nincs adat.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="legtamogatottabb-jelolt">
+            <h2>Legtámogatottabb Jelölt</h2>
+            <p>Ez a táblázat a legtöbb szavazatot kapott jelölt nevét és a kapott szavazatok számát mutatja.</p>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Jelölt neve</th>
+                    <th>Szavazatok száma</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${legtamogatottabbJelolt}">
+                    <td th:text="${row.jelolt_nev}">Jelölt neve</td>
+                    <td th:text="${row.szavazatok_szama}">Szavazatok száma</td>
+                </tr>
+                <tr th:if="${legtamogatottabbJelolt.empty}">
+                    <td colspan="2">Nincs adat.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="legtamogatottabb-jelolt-datum">
+            <h2>Legtámogatottabb Jelölt egy Időpont Után</h2>
+            <p>Adjon meg egy dátumot (YYYY-MM-DD formátumban), hogy lekérdezze az adott időpont utáni legtámogatottabb jelöltet.</p>
+
+            <form th:action="@{/lekerdezes}" method="get">
+                <label for="datum">Dátum:</label>
+                <input type="date" id="datum" name="datum" required />
+                <button type="submit">Lekérdezés</button>
+            </form>
+
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Jelölt neve</th>
+                    <th>Szavazatok száma</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${legtamogatottabbJeloltDatummal}">
+                    <td th:text="${row.nev}">Jelölt neve</td>
+                    <td th:text="${row.szavazatok_szama}">Szavazatok száma</td>
+                </tr>
+                <tr th:if="${legtamogatottabbJeloltDatummal.empty}">
+                    <td colspan="2">Nincs adat.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Szavazatszámláló Rendszer</p>
+    </footer>
+</body>
+</html>
