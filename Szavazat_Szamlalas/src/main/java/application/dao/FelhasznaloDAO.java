@@ -45,10 +45,12 @@ public class FelhasznaloDAO extends JdbcDaoSupport {
 
     public void updateFelhasznalo(Felhasznalo felhasznalo) {
         try {
-            String sql = "UPDATE Felhasznalo SET felhasznalonev = ?, email = ? WHERE id = ?";
+            String sql = "UPDATE Felhasznalo SET felhasznalonev = ?, email = ?, szerep = ? WHERE id = ?";
+            
             getJdbcTemplate().update(sql,
                     felhasznalo.getUsername(),
                     felhasznalo.getEmail(),
+                    felhasznalo.getRole(),
                     felhasznalo.getId()
             );
         } catch (DataAccessException ex) {

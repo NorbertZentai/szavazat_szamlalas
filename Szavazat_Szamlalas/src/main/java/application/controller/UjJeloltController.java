@@ -40,6 +40,6 @@ public class UjJeloltController {
         jeloltDAO.insertJelolt(ujJelolt);
 
         model.addAttribute("message", "Jelölt sikeresen hozzáadva!");
-        return "szavazasok";
+        return "redirect:/szavazasok";
     }
 }

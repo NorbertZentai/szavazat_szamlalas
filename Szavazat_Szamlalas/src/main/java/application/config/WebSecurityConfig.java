@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import application.service.CustomUserDetailsService; 
 
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -20,20 +19,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
       .authorizeRequests()
-      // Engedélyezett URL-ek a nem bejelentkezettek számára
-      .antMatchers("/", "/login", "/register", "/css/**").permitAll()
-      
-      // Admin oldal elérése csak admin szerepkörűeknek
+      .antMatchers("/", "/login", "/customlogin", "/register", "/registeruser", "/css/**").permitAll()
       .antMatchers("/admin/**").hasRole("ADMIN")
-      
-      // Bejelentkezett felhasználóknak elérhető oldal
       .antMatchers("/profil/**", "/szavazas/**", "/szavazasok/**", "/ujszavazas", "/ujjelolt").authenticated()
-      
-      // Alapértelmezett bejelentkezés
       .anyRequest().authenticated()
       .and()
       .formLogin()
-      .loginPage("/login") // Bejelentkezés oldalt itt állítjuk be
+      .loginPage("/login")
       .permitAll()
       .and()
       .logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true).clearAuthentication(true).permitAll();

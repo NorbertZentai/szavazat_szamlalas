@@ -47,6 +47,7 @@
                     <input type="email" id="email" name="email" th:value="${felhasznalo.email}" required />
                 </div>
                 <div>
+                    <input type="hidden" name="id" th:value="${felhasznalo.id}">
                     <button type="submit">Frissítés</button>
                 </div>
             </form>

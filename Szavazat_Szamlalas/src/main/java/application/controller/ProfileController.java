@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -65,6 +66,11 @@ public class ProfileController {
             felhasznalo.setName(username);
             felhasznalo.setEmail(email);
             felhasznaloDAO.updateFelhasznalo(felhasznalo);
+            
+            if (!currentUsername.equals(username)) {
+                Authentication newAuth = new UsernamePasswordAuthenticationToken(felhasznalo, authentication.getCredentials(), authentication.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
+            }
         }
         
         return "redirect:/profil";
