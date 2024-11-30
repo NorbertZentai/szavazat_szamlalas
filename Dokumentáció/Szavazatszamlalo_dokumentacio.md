@@ -3,8 +3,6 @@
 
 ## 1. Az adatbázis modelljének E-K diagramja és annak értelmezése
 
-Az E-K diagram leírja a szavazatszámláló alkalmazás adatbázisának fő entitásait és az azok közötti kapcsolatokat.
-
 ### Entitások:
 - **Felhasználó**: Regisztrált személy, aki szavazásokat hozhat létre vagy szavazhat.
 - **Szavazás**: Egy esemény, amely során szavazni lehet adott jelöltekre.
@@ -17,15 +15,15 @@ Az E-K diagram leírja a szavazatszámláló alkalmazás adatbázisának fő ent
 - Egy jelölt **több szavazáson** is indulhat.
 - Egy szavazás **több jelöltet** tartalmazhat.
 
-![E-K Diagram](ek-diagram.png)
+![E-K Diagram](/kepek/adatb_szavazat.drawio.png)
 
 ## 2. Az E-K diagram leképezése relációs sémákká
 
 ### Relációk:
-1. **Felhasználó** (Felhasználónév *PK*, Email, Jelszó, UtolsóBelépés)
-2. **Szavazás** (SzavazásID *PK*, Megnevezés, Leírás, Indul, Zárul, LétrehozóFelhasználónév *FK*)
-3. **Jelölt** (JelöltID *PK*, Név, SzületésiDátum, Foglalkozás, Program)
-4. **Szavazat** (SzavazatID *PK*, SzavazóFelhasználónév *FK*, SzavazásID *FK*, JelöltID *FK*, Időpont)
+1. **Felhasználó** (Felhasználónév *(PK)*, Email, Jelszó, UtolsóBelépés)
+2. **Szavazás** (SzavazásID *(PK)*, Megnevezés, Leírás, Indul, Zárul, LétrehozóFelhasználónév *(FK)*)
+3. **Jelölt** (JelöltID *(PK)*, Név, SzületésiDátum, Foglalkozás, Program)
+4. **Szavazat** (SzavazatID *(PK)*, SzavazóFelhasználónév *(FK)*, SzavazásID *(FK)*, JelöltID *(FK)*, Időpont)
 
 ### Kapcsolatok:
 - **LétrehozóFelhasználónév** a **Felhasználó** táblára hivatkozik.
@@ -71,61 +69,97 @@ Az adatbázisban nincsenek tranzitív függőségek, így az adatbázis 3NF-ben 
 
 ## 5. Program funkciói és megvalósítása
 
-- **Bejelentkezés**: Felhasználók űrlapon keresztül bejelentkezhetnek.
+- **Bejelentkezés**: Felhasználók űrlapon keresztül bejelentkezhetnek. Bejelentkezés nélkül nem lehet szavazni. Csak megtekinteni a lekérdezéseket és a szavazásokat.
 - **Adatok kezelése**:
   - Új szavazások létrehozása.
   - Jelöltek hozzáadása a szavazásokhoz.
   - Szavazatok leadása.
+  - Admin: Uj jelolt létrehozása.
+  - Admin: Admin felületen minden tábla kezelése (módosítás, törlés), kívéve a szavazatokat.
 - **Lekérdezések**:
-  - Egy szavazás jelenlegi állása (jelöltenként szavazatszám).
-  - Legutóbbi szavazások listája.
-  - Egy adott jelölt szavazattörténete.
+  - Minden táblához tartozik külön lekérdezés.
+  - Összesített lekérdezések, amik elérhetők a Lekérdezések oldalon.
 
 ## 6. Lekérdezések
 
-### 1. Szavazás állása (csoportosítás, összesítő függvény)
+### 1. osszetett lekerdezest, ami kiirja, hogy milyen szavazasra, a szavazas leirasa, mennyien szavaztak
 ```sql
-SELECT JelöltID, COUNT(*) AS Szavazatok
-FROM Szavazat
-WHERE SzavazásID = ?
-GROUP BY JelöltID;
+SELECT 
+    szavazas.megnevezes AS szavazas_neve,
+    szavazas.leiras AS szavazas_leirasa,
+    COUNT(DISTINCT szavazat.felhasznalo_id) AS szavazatok_szama
+FROM 
+    Szavazas szavazas
+JOIN 
+    Szavazat szavazat ON szavazas.id = szavazat.szavazas_id
+GROUP BY 
+    szavazas.id
+ORDER BY 
+    szavazas.megnevezes;
 ```
-Fájl: `queries/get_voting_status.sql`
 
-### 2. Legutóbbi szavazások
+### 2. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel
 ```sql
-SELECT SzavazásID, Megnevezés, Indul, Zárul
-FROM Szavazás
-ORDER BY Indul DESC
-LIMIT 10;
+SELECT 
+    jelolt.nev AS jelolt_nev, 
+    COUNT(szavazat.id) AS szavazatok_szama
+FROM 
+    Jelolt jelolt
+JOIN 
+    Szavazat szavazat ON jelolt.id = szavazat.jelolt_id
+GROUP BY 
+    jelolt.id
+ORDER BY 
+    szavazatok_szama DESC;
 ```
-Fájl: `queries/get_recent_votings.sql`
 
-### 3. Egy jelölt szavazattörténete (allekérdezés)
+### 3. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel
 ```sql
-SELECT SzavazásID, COUNT(*) AS Szavazatok
-FROM Szavazat
-WHERE JelöltID = ?
-GROUP BY SzavazásID;
+SELECT 
+    szavazas.megnevezes AS szavazas_nev, 
+    jelolt.nev AS jelolt_nev, 
+    COUNT(szavazat.id) AS szavazatok_szama
+FROM 
+    Szavazas szavazas
+JOIN 
+    Szavazat szavazat ON szavazas.id = szavazat.szavazas_id
+JOIN 
+    Jelolt jelolt ON szavazat.jelolt_id = jelolt.id
+GROUP BY 
+    szavazas.id, jelolt.id
+ORDER BY 
+    szavazas_nev;
 ```
-Fájl: `queries/get_candidate_history.sql`
 
-## 7. Adatbázis adatok
+### 4. Allekérdezés használata a legjobban támogatott jelöltek lekérdezésére
+```sql
+SELECT jelolt.nev AS jelolt_nev, COUNT(szavazat.id) AS szavazatok_szama
+FROM Jelolt jelolt
+JOIN Szavazat szavazat ON jelolt.id = szavazat.jelolt_id
+WHERE jelolt.id IN (
+    SELECT jelolt_id
+    FROM Szavazat
+    GROUP BY jelolt_id
+    HAVING COUNT(id) = (
+        SELECT MAX(szavazatok_szama)
+        FROM (
+            SELECT COUNT(id) AS szavazatok_szama
+            FROM Szavazat
+            GROUP BY jelolt_id
+        ) AS max_szavazatok
+    )
+)
+GROUP BY jelolt.id;
+```
+### 5. Jelöltnek a neve, aki a legtöbb szavazatot kapta egy adott időpont után:
 
-- Az adatbázis 4 összefüggő táblából áll.
-- Az adatbázis 50 rekordot tartalmaz mintafelhasználókkal, szavazásokkal, jelöltekkel és szavazatokkal.
-- Az integritás biztosított kulcsokkal és külső kulcsokkal.
-
-## 8. Követelmények teljesítése
-
-| Követelmény             | Teljesítés |
-|-------------------------|------------|
-| E-K diagram             | ✅          |
-| Relációs sémák          | ✅          |
-| Normalizálás            | ✅          |
-| Táblatervek             | ✅          |
-| Funkciók dokumentálása  | ✅          |
-| Lekérdezések            | ✅          |
-| Adatbázis szerkezete    | ✅          |
-| Program funkciók        | ✅          |
-
+```sql
+SELECT jelolt.nev, 
+       COUNT(szavazat.id) AS szavazatok_szama
+FROM Jelolt jelolt
+JOIN Szavazat szavazat ON jelolt.id = szavazat.jelolt_id
+WHERE szavazat.idopont > '2024-11-01'
+GROUP BY jelolt.id
+ORDER BY szavazatok_szama DESC
+LIMIT 1;
+```

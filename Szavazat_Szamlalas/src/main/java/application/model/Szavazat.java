@@ -1,7 +1,5 @@
 package application.model;
 
-import java.sql.Timestamp;
-
 public class Szavazat {
     private int id;
     private int felhasznaloId;

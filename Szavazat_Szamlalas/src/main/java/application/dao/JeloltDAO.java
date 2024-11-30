@@ -24,7 +24,6 @@ public class JeloltDAO extends JdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    // Get all Jelolt
     public List<Jelolt> getOsszesJelolt() {
         String sql = "SELECT * FROM Jelolt";
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
@@ -43,7 +42,6 @@ public class JeloltDAO extends JdbcDaoSupport {
         return jeloltek;
     }
 
-    // Insert Jelolt
     public void insertJelolt(Jelolt jelolt) {
         try {
             String sql = "INSERT INTO Jelolt(nev, szuletesi_datum, foglalkozas, program) VALUES (?, ?, ?, ?)";
@@ -58,7 +56,6 @@ public class JeloltDAO extends JdbcDaoSupport {
         }
     }
 
-    // Update Jelolt
     public void updateJelolt(int id, Jelolt jelolt) {
         try {
             String sql = "UPDATE Jelolt SET nev = ?, szuletesi_datum = ?, foglalkozas = ?, program = ? WHERE id = ?";
@@ -74,7 +71,6 @@ public class JeloltDAO extends JdbcDaoSupport {
         }
     }
 
-    // Delete Jelolt
     public void deleteJelolt(int id) {
         try {
             String sql = "DELETE FROM Jelolt WHERE id = ?";
@@ -84,7 +80,6 @@ public class JeloltDAO extends JdbcDaoSupport {
         }
     }
 
-    // Get Jelolt by ID
     public Jelolt getJeloltById(int id) {
         String sql = "SELECT * FROM Jelolt WHERE id = ?";
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql, id);

@@ -20,7 +20,7 @@ public class SzavazatDAO {
 
     @PostConstruct
     private void initialize() {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);  // Kézzel inicializáljuk a JdbcTemplate-et
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public Szavazat insertSzavazat(Szavazat szavazat) {
@@ -59,6 +59,5 @@ public class SzavazatDAO {
         String sql = "SELECT COUNT(*) FROM Szavazat WHERE szavazas_id = ? AND felhasznalo_id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{szavazasId, felhasznaloId}, Integer.class);
         return count > 0;
-    }
-    
+    }    
 }

@@ -34,9 +34,9 @@ public class LekerdezesDAO extends JdbcDaoSupport {
     public List<Map<String, Object>> getSzavazatByJelolt() {
         String query = "SELECT " +
                 "jelolt.nev AS jelolt_nev, " +
-                "COUNT(s.id) AS szavazatok_szama " +
+                "COUNT(szavazat.id) AS szavazatok_szama " +  // Ellenőrizd, hogy szavazat.id létezik-e az adatbázisban
                 "FROM Jelolt jelolt " +
-                "JOIN Szavazat s ON jelolt.id = s.jelolt_id " +
+                "JOIN Szavazat szavazat ON jelolt.id = szavazat.jelolt_id " +
                 "GROUP BY jelolt.id " +
                 "ORDER BY szavazatok_szama DESC";
 
@@ -49,13 +49,13 @@ public class LekerdezesDAO extends JdbcDaoSupport {
 
     public List<Map<String, Object>> getSzavazatokBySzavazasokEsJeloltek() {
         String query = "SELECT " +
-                "sz.megnevezes AS szavazas_nev, " +
-                "j.nev AS jelolt_nev, " +
-                "COUNT(s.id) AS szavazatok_szama " +
-                "FROM Szavazas sz " +
-                "JOIN Szavazat s ON sz.id = s.szavazas_id " +
-                "JOIN Jelolt j ON s.jelolt_id = j.id " +
-                "GROUP BY sz.id, j.id " +
+                "szavazas.megnevezes AS szavazas_nev, " +
+                "jelolt.nev AS jelolt_nev, " +
+                "COUNT(szavazat.id) AS szavazatok_szama " + // Ellenőrizd, hogy szavazat.id létezik-e az adatbázisban
+                "FROM Szavazas szavazas " +
+                "JOIN Szavazat szavazat ON szavazas.id = szavazat.szavazas_id " +
+                "JOIN Jelolt jelolt ON szavazat.jelolt_id = jelolt.id " +
+                "GROUP BY szavazas.id, jelolt.id " +
                 "ORDER BY szavazas_nev";
 
         try {
@@ -66,10 +66,10 @@ public class LekerdezesDAO extends JdbcDaoSupport {
     }
 
     public List<Map<String, Object>> getLegtamogatottabJelolt() {
-        String query = "SELECT j.nev AS jelolt_nev, COUNT(s.id) AS szavazatok_szama " +
-                "FROM Jelolt j " +
-                "JOIN Szavazat s ON j.id = s.jelolt_id " +
-                "WHERE j.id IN (" +
+        String query = "SELECT jelolt.nev AS jelolt_nev, COUNT(szavazat.id) AS szavazatok_szama " +  // Ellenőrizd, hogy szavazat.id létezik-e az adatbázisban
+                "FROM Jelolt jelolt " +
+                "JOIN Szavazat szavazat ON jelolt.id = szavazat.jelolt_id " +
+                "WHERE jelolt.id IN (" +
                 "    SELECT jelolt_id " +
                 "    FROM Szavazat " +
                 "    GROUP BY jelolt_id " +
@@ -79,10 +79,10 @@ public class LekerdezesDAO extends JdbcDaoSupport {
                 "            SELECT COUNT(id) AS szavazatok_szama " +
                 "            FROM Szavazat " +
                 "            GROUP BY jelolt_id" +
-                "        ) AS subquery" +
+                "        ) AS max_szavazatok" +
                 "    )" +
                 ") " +
-                "GROUP BY j.id";
+                "GROUP BY jelolt.id";
 
         try {
             return getJdbcTemplate().queryForList(query);
@@ -92,11 +92,11 @@ public class LekerdezesDAO extends JdbcDaoSupport {
     }
 
     public List<Map<String, Object>> getlegtamogatottabbJeloltDatummal(String date) {
-        String query = "SELECT j.nev, COUNT(s.id) AS szavazatok_szama " +
-                "FROM Jelolt j " +
-                "JOIN Szavazat s ON j.id = s.jelolt_id " +
-                "WHERE s.idopont > ? " +
-                "GROUP BY j.id " +
+        String query = "SELECT jelolt.nev, COUNT(szavazat.id) AS szavazatok_szama " +
+                "FROM Jelolt jelolt " +
+                "JOIN Szavazat szavazat ON jelolt.id = szavazat.jelolt_id " +
+                "WHERE szavazat.idopont > ? " +
+                "GROUP BY jelolt.id " +
                 "ORDER BY szavazatok_szama DESC " +
                 "LIMIT 1";
         try {
