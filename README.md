@@ -1,5 +1,5 @@
 
-# Szavazat Számlálás Projekt
+# Szavazatszámlálás Projekt
 
 ## Leírás
 
