@@ -10,10 +10,10 @@
 - **Szavazat**: Egy adott felhasználó szavazata egy adott szavazás során egy adott jelöltre.
 
 ### Kapcsolatok:
-- Egy felhasználó **több szavazást** is létrehozhat.
-- Egy felhasználó **több szavazaton** szavazhat, de egy szavazáson **csak egyszer**.
-- Egy jelölt **több szavazáson** is indulhat.
-- Egy szavazás **több jelöltet** tartalmazhat.
+- Egy felhasználó több szavazást is létrehozhat.
+- Egy felhasználó több szavazaton szavazhat, de egy szavazáson csak egyszer.
+- Egy jelölt több szavazáson is indulhat.
+- Egy szavazás több jelöltet tartalmazhat.
 
 ![E-K Diagram](/kepek/adatb_szavazat.drawio.png)
 
@@ -26,22 +26,19 @@
 4. **Szavazat** (SzavazatID *(PK)*, SzavazóFelhasználónév *(FK)*, SzavazásID *(FK)*, JelöltID *(FK)*, Időpont)
 
 ### Kapcsolatok:
-- **LétrehozóFelhasználónév** a **Felhasználó** táblára hivatkozik.
-- **SzavazóFelhasználónév** a **Felhasználó** táblára hivatkozik.
-- **SzavazásID** a **Szavazás** táblára hivatkozik.
-- **JelöltID** a **Jelölt** táblára hivatkozik.
+- LétrehozóFelhasználónév a Felhasználó táblára hivatkozik.
+- SzavazóFelhasználónév a Felhasználó táblára hivatkozik.
+- SzavazásID a Szavazás táblára hivatkozik.
+- JelöltID a Jelölt táblára hivatkozik.
 
 ## 3. Sémák normalizálása
 
 ### 1NF
-Minden mező atomi értékeket tartalmaz, így az adatbázis eleve 1NF-ben van.
-
+Az adatbázis minden mezője csak egyetlen, oszthatatlan értéket tartalmaz, tehát nincsenek összetett vagy többértékű attribútumok.
 ### 2NF
-Minden nem kulcs attribútum teljes kulcsfüggőségben van, így az adatbázis már 2NF-ben van.
-
+Minden nem kulcs attribútum teljesen függ a relációséma kulcsától, tehát nem függ azok egy részétől, csak a teljes kulcstól.
 ### 3NF
 Az adatbázisban nincsenek tranzitív függőségek, így az adatbázis 3NF-ben van.
-
 ## 4. Táblatervek
 
 | Tábla         | Oszlop             | Típus          | Megjegyzés                        |
@@ -82,7 +79,13 @@ Az adatbázisban nincsenek tranzitív függőségek, így az adatbázis 3NF-ben 
 
 ## 6. Lekérdezések
 
-### 1. osszetett lekerdezest, ami kiirja, hogy milyen szavazasra, a szavazas leirasa, mennyien szavaztak
+### 1. osszetett lekerdezest:
+**Leírás:** A lekérdezés visszaadja, hogy az adott szavazásokra hányan szavaztak.
+
+**Megjelenített adatok:** Szavazás neve, szavazás leírása, szavazatok száma.
+
+**SQL:**
+
 ```sql
 SELECT 
     szavazas.megnevezes AS szavazas_neve,
@@ -98,7 +101,13 @@ ORDER BY
     szavazas.megnevezes;
 ```
 
-### 2. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel
+### 2. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel:
+**Leírás:** A lekérdezés a jelöltek nevét és az általuk kapott szavazatok számát jeleníti meg.
+
+**Megjelenített adatok:** Jelölt neve, szavazatok száma.
+
+**SQL:**
+
 ```sql
 SELECT 
     jelolt.nev AS jelolt_nev, 
@@ -113,7 +122,12 @@ ORDER BY
     szavazatok_szama DESC;
 ```
 
-### 3. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel
+### 3. Két tábla össze kapcsolása és csoportosítás összesítő függvénnyel:
+**Leírás:** A lekérdezés a szavazások nevét és azokhoz tartozó jelöltek szavazatainak számát jeleníti meg. 
+
+**Megjelenített adatok:** Szavazás neve, jelölt neve, szavazatok száma.
+
+**SQL:**
 ```sql
 SELECT 
     szavazas.megnevezes AS szavazas_nev, 
@@ -131,7 +145,12 @@ ORDER BY
     szavazas_nev;
 ```
 
-### 4. Allekérdezés használata a legjobban támogatott jelöltek lekérdezésére
+### 4. Allekérdezés használata a legjobban támogatott jelöltek lekérdezésére:
+**Leírás:** A lekérdezés azokat a jelölteket jeleníti meg, akik a legtöbb szavazatot kapták, valamint azt is, hogy hány szavazatot kaptak.
+
+**Megjelenített adatok:** Jelölt neve, szavazatok száma.
+
+**SQL:**
 ```sql
 SELECT jelolt.nev AS jelolt_nev, COUNT(szavazat.id) AS szavazatok_szama
 FROM Jelolt jelolt
@@ -152,7 +171,12 @@ WHERE jelolt.id IN (
 GROUP BY jelolt.id;
 ```
 ### 5. Jelöltnek a neve, aki a legtöbb szavazatot kapta egy adott időpont után:
+**Leírás:** A lekérdezés a legnépszerűbb jelölt nevét és a hozzá tartozó szavazatok számát jeleníti meg egy adott időpont után.
 
+**Megjelenített adatok:**  Jelölt neve, szavazatok száma.
+
+
+**SQL:**
 ```sql
 SELECT jelolt.nev, 
        COUNT(szavazat.id) AS szavazatok_szama
